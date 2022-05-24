@@ -16,6 +16,12 @@ To build the python bindings (default on, disable with -DBUILD_PYTHON=OFF) these
 * python3-dev (3.4+)
 * python3-sip-dev (4.16+)
 
+On Ubuntu 20.04 this can be achieved with:
+
+```
+sudo apt install build-essential cmake python3-dev python3-sip-dev protobuf-compiler libprotoc-dev libprotobuf-dev
+```
+
 Building the library can be done with:
 
 - ```$ mkdir build && cd build```
@@ -29,8 +35,7 @@ To disable this, set BUILD_EXAMPLES to off.
 
 To disable building the Python bindings, set BUILD_PYTHON to OFF. They will be
 installed into ```$prefix/lib/python3/dist-packages``` on Debian-based systems
-and into ```$prefix/lib/python3.4/site-packages``` on other computers. To
-override this directory, set ```PYTHON_SITE_PACKAGES_DIR```.
+and into ```$prefix/lib/python3.4/site-packages``` on other computers.
 
 Building the Python bindings on 64-bit Windows requires you to build with Microsoft Visual
 C++ since the module will fail to import if built with MinGW.

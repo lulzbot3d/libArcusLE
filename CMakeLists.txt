@@ -1,8 +1,9 @@
 project(arcus)
-cmake_minimum_required(VERSION 2.8.12)
+cmake_minimum_required(VERSION 3.8)
 
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
+include(GenerateExportHeader)
 
 option(BUILD_PYTHON "Build " ON)
 option(BUILD_EXAMPLES "Build the example programs" ON)
@@ -13,31 +14,36 @@ option(MSVC_STATIC_RUNTIME "Link the MSVC runtime statically" OFF)
 # We want to have access to protobuf_generate_cpp and other FindProtobuf features.
 # However, if ProtobufConfig is used instead, there is a CMake option that controls
 # this, which defaults to OFF. We need to force this option to ON instead.
-set(protobuf_MODULE_COMPATIBLE ON CACHE "" INTERNAL FORCE)
+set(protobuf_MODULE_COMPATIBLE ON CACHE INTERNAL "" FORCE)
 find_package(Protobuf 3.0.0 REQUIRED)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON) #Required if a patch to libArcus needs to be made via templates.
 
 if(BUILD_PYTHON)
-    set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+    list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+
+    # FIXME: Remove the code for CMake <3.12 once we have switched over completely.
+    # FindPython3 is a new module since CMake 3.12. It deprecates FindPythonInterp and FindPythonLibs.
+    if(${CMAKE_VERSION} VERSION_LESS 3.12)
+        # FIXME: Use FindPython3 to find Python, new in CMake 3.12.
+        # However currently on our CI server it finds the wrong Python version and then doesn't find the headers.
+        find_package(PythonInterp 3.4 REQUIRED)
+        find_package(PythonLibs 3.4 REQUIRED)
+
+    else()
+        # Use FindPython3 for CMake >=3.12
+        find_package(Python3 3.4 REQUIRED COMPONENTS Interpreter Development)
+    endif()
+
     find_package(SIP REQUIRED)
     if(NOT DEFINED LIB_SUFFIX)
         set(LIB_SUFFIX "")
     endif()
-    if(EXISTS /etc/debian_version)
-        # Running on a debian-based system, which requires special handling for python modules.
-        set(PYTHON_SITE_PACKAGES_DIR lib${LIB_SUFFIX}/python3/dist-packages CACHE STRING "Directory to install Python bindings to")
-    else()
-        set(PYTHON_SITE_PACKAGES_DIR lib${LIB_SUFFIX}/python${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}/site-packages CACHE STRING "Directory to install Python bindings to")
-    endif()
-    include_directories(python/ src/ ${SIP_INCLUDE_DIR} ${PYTHON_INCLUDE_DIR})
+
+    include_directories(python/ src/ ${SIP_INCLUDE_DIRS} ${Python3_INCLUDE_DIRS})
 endif()
 
-if(NOT ${CMAKE_VERSION} VERSION_LESS 3.1)
-    set(CMAKE_CXX_STANDARD 11)
-else()
-    set(CMAKE_CXX_FLAGS "-std=c++11")
-endif()
+set(CMAKE_CXX_STANDARD 17)
 
 if(APPLE AND CMAKE_CXX_COMPILER_ID MATCHES "Clang")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
@@ -55,9 +61,9 @@ set(arcus_HDRS
     src/Socket.h
     src/SocketListener.h
     src/Types.h
-    src/ArcusExport.h
     src/MessageTypeStore.h
     src/Error.h
+    ${CMAKE_CURRENT_BINARY_DIR}/src/ArcusExport.h
 )
 
 set(ARCUS_VERSION 1.1.0)
@@ -88,7 +94,7 @@ endif()
 if(BUILD_PYTHON)
     set(SIP_EXTRA_FILES_DEPEND python/SocketListener.sip python/Types.sip python/PythonMessage.sip python/Error.sip)
     set(SIP_EXTRA_SOURCE_FILES python/PythonMessage.cpp)
-    set(SIP_EXTRA_OPTIONS -g -n PyQt5.sip) # -g means always release the GIL before calling C++ methods.
+    set(SIP_EXTRA_OPTIONS -g -n PyQt5.sip) # -g means always release the GIL before calling C++ methods. -n PyQt5.sip is required to not get the PyCapsule error
     add_sip_python_module(Arcus python/Socket.sip Arcus)
 endif()
 
@@ -117,7 +123,16 @@ set_target_properties(Arcus PROPERTIES
     SOVERSION ${ARCUS_SOVERSION}
     PUBLIC_HEADER "${arcus_HDRS}"
     DEFINE_SYMBOL MAKE_ARCUS_LIB
+    CXX_VISIBILITY_PRESET hidden
+    VISIBILITY_INLINES_HIDDEN 1
 )
+
+generate_export_header(Arcus
+    EXPORT_FILE_NAME src/ArcusExport.h
+)
+# This is required when building out-of-tree.
+# The compiler won't find the generated header otherwise.
+include_directories(${CMAKE_BINARY_DIR}/src)
 
 if(BUILD_EXAMPLES)
     add_subdirectory(examples)
