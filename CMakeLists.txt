@@ -6,10 +6,10 @@ include(CMakePackageConfigHelpers)
 include(GenerateExportHeader)
 
 option(BUILD_PYTHON "Build " ON)
-option(BUILD_EXAMPLES "Build the example programs" ON)
+option(BUILD_EXAMPLES "Build the example programs" OFF)
 option(BUILD_STATIC "Build as a static library" OFF)
 
-option(MSVC_STATIC_RUNTIME "Link the MSVC runtime statically" OFF)
+option(MSVC_STATIC_RUNTIME "Link the MSVC runtime statically" ON)
 
 # We want to have access to protobuf_generate_cpp and other FindProtobuf features.
 # However, if ProtobufConfig is used instead, there is a CMake option that controls
@@ -81,6 +81,7 @@ else()
     add_library(Arcus SHARED ${arcus_SRCS})
 endif()
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MT")
 if(MSVC_STATIC_RUNTIME)
     foreach(flag_var
             CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
