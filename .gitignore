@@ -69,3 +69,16 @@ nbproject/*
 
 # Generated headers
 /src/ArcusExport.h
+/cmake-build-*
+/conan.lock
+/conanbuildinfo.txt
+/conaninfo.txt
+/graph_info.json
+/conan.lock
+/CMakeUserPresets.json
+/conanbuildinfo.txt
+/conaninfo.txt
+/graph_info.json
+
+*.bak
+.vs/

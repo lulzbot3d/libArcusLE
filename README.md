@@ -1,47 +1,162 @@
-Arcus
-=====
+# Arcus
 
-This library contains C++ code and Python3 bindings for creating a socket in a thread
-and using this socket to send and receive messages based on the Protocol Buffers
-library. It is designed to facilitate the communication between Cura and its
-backend and similar code.
+<p align="center">
+    <a href="https://github.com/Ultimaker/libArcus/actions/workflows/conan-package.yml" alt="Conan Package">
+        <img src="https://github.com/Ultimaker/libarcus/actions/workflows/conan-package.yml/badge.svg" /></a>
+    <a href="https://github.com/Ultimaker/libArcus/issues" alt="Open Issues">
+        <img src="https://img.shields.io/github/issues/ultimaker/libarcus" /></a>
+    <a href="https://github.com/Ultimaker/libArcus/issues?q=is%3Aissue+is%3Aclosed" alt="Closed Issues">
+        <img src="https://img.shields.io/github/issues-closed/ultimaker/libarcus?color=g" /></a>
+    <a href="https://github.com/Ultimaker/libArcus/pulls" alt="Pull Requests">
+        <img src="https://img.shields.io/github/issues-pr/ultimaker/libarcus" /></a>
+    <a href="https://github.com/Ultimaker/libArcus/graphs/contributors" alt="Contributors">
+        <img src="https://img.shields.io/github/contributors/ultimaker/libarcus" /></a>
+    <a href="https://github.com/Ultimaker/libArcus" alt="Repo Size">
+        <img src="https://img.shields.io/github/repo-size/ultimaker/libarcus?style=flat" /></a>
+    <a href="https://github.com/Ultimaker/libArcus/blob/master/LICENSE" alt="License">
+        <img src="https://img.shields.io/github/license/ultimaker/libarcus?style=flat" /></a>
+</p>
 
-Building
-========
+This library contains C++ code for creating a socket in a thread and using this socket to send and receive messages
+based on the Protocol Buffers library. It is designed to facilitate the communication between Cura and its backend and similar code.
 
-To build the library, the following packages are needed:
-* [Protobuf 3](https://github.com/google/protobuf) (3.0+)
-* [CMake](https://www.cmake.org)
-To build the python bindings (default on, disable with -DBUILD_PYTHON=OFF) these additional libries are needed:
-* python3-dev (3.4+)
-* python3-sip-dev (4.16+)
+<br>
 
-On Ubuntu 20.04 this can be achieved with:
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/Ultimaker/libArcus/badge)](https://api.securityscorecards.dev/projects/github.com/Ultimaker/libArcus)
 
+<br>
+
+## License
+
+![License](https://img.shields.io/github/license/ultimaker/libarcus?style=flat)  
+Arcus is released under terms of the AGPLv3 License. Terms of the license can be found in the LICENSE file. Or at
+http://www.gnu.org/licenses/agpl.html
+
+> But in general it boils down to:  
+> **You need to share the source of any Arcus modifications if you make an application with Arcus.**
+
+## System Requirements
+
+### Windows
+- Python 3.6 or higher
+- Ninja 1.10 or higher
+- VS2022 or higher
+- CMake 3.23 or higher
+- nmake
+- protobuf
+- zlib
+- Conan 1.56.0
+
+### MacOs
+- Python 3.6 or higher
+- Ninja 1.10 or higher
+- apply clang 11 or higher
+- CMake 3.23 or higher
+- make
+- protobuf
+- zlib
+- Conan 1.56.0
+
+### Linux
+- Python 3.6 or higher
+- Ninja 1.10 or higher
+- gcc 12 or higher
+- CMake 3.23 or higher
+- make
+- protobuf
+- zlib
+- Conan 1.56.0
+
+
+## How To Build
+
+> **Note:**  
+> We are currently in the process of switch our builds and pipelines to an approach which uses [Conan](https://conan.io/)
+> and pip to manage our dependencies, which are stored on our JFrog Artifactory server and in the pypi.org.
+> At the moment not everything is fully ported yet, so bare with us.
+
+If you want to develop Cura with libArcus see the Cura Wiki: [Running Cura from source](https://github.com/Ultimaker/Cura/wiki/Running-Cura-from-Source)
+
+If you have never used [Conan](https://conan.io/) read their [documentation](https://docs.conan.io/en/latest/index.html)
+which is quite extensive and well maintained. Conan is a Python program and can be installed using pip
+
+### 1. Configure Conan
+
+```bash
+pip install conan==1.56
+conan config install https://github.com/ultimaker/conan-config.git
+conan profile new default --detect --force
 ```
-sudo apt install build-essential cmake python3-dev python3-sip-dev protobuf-compiler libprotoc-dev libprotobuf-dev
+
+Community developers would have to remove the Conan cura repository because it requires credentials. 
+
+Ultimaker developers need to request an account for our JFrog Artifactory server at IT
+```bash
+conan remote remove cura
 ```
 
-Building the library can be done with:
+### 2. Clone libArcus
+```bash
+git clone https://github.com/Ultimaker/libArcus.git
+cd libArcus
+```
 
-- ```$ mkdir build && cd build```
-- ```$ cmake ..```
-- ```$ make```
-- ```# make install```
+### 3. Install & Build libArcus (Release OR Debug)
 
-This will install to CMake's default install prefix, ```/usr/local```. To change the
-prefix, set ```CMAKE_INSTALL_PREFIX```. By default, the examples directory is also built.
-To disable this, set BUILD_EXAMPLES to off.
+#### Release
+```bash
+conan install . --build=missing --update
+# optional for a specific version: conan install . arcus/<version>@<user>/<channel> --build=missing --update
+cmake --preset release
+cmake --build --preset release
+```
 
-To disable building the Python bindings, set BUILD_PYTHON to OFF. They will be
-installed into ```$prefix/lib/python3/dist-packages``` on Debian-based systems
-and into ```$prefix/lib/python3.4/site-packages``` on other computers.
+#### Debug
 
-Building the Python bindings on 64-bit Windows requires you to build with Microsoft Visual
-C++ since the module will fail to import if built with MinGW.
+```bash
+conan install . --build=missing --update build_type=Debug
+cmake --preset debug
+cmake --build --preset debug
+```
 
-Using the Socket
-================
+## Creating a new Arcus Conan package
+
+To create a new Arcus Conan package such that it can be used in Cura and Uranium, run the following command:
+
+```shell
+conan create . arcus/<version>@<username>/<channel> --build=missing --update
+```
+
+This package will be stored in the local Conan cache (`~/.conan/data` or `C:\Users\username\.conan\data` ) and can be used in downstream
+projects, such as Cura and Uranium by adding it as a requirement in the `conanfile.py` or in `conandata.yml`.
+
+Note: Make sure that the used `<version>` is present in the conandata.yml in the libArcus root
+
+You can also specify the override at the commandline, to use the newly created package, when you execute the `conan install`
+command in the root of the consuming project, with:
+
+
+```shell
+conan install . -build=missing --update --require-override=arcus/<version>@<username>/<channel>
+```
+
+## Developing libArcus In Editable Mode
+
+You can use your local development repository downsteam by adding it as an editable mode package.
+This means you can test this in a consuming project without creating a new package for this project every time.
+
+```bash
+    conan editable add . arcus/<version>@<username>/<channel>
+```
+
+Then in your downsteam projects (Cura) root directory override the package with your editable mode package.  
+
+```shell
+conan install . -build=missing --update --require-override=arcus/<version>@<username>/<channel>
+```
+
+## Using the Socket
+
 
 The socket assumes a very simple and strict wire protocol: one 32-bit integer with
 a header, one 32-bit integer with the message size, one 32-bit integer with a type id
