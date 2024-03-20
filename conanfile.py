@@ -16,12 +16,12 @@ required_conan_version = ">=1.55.0"
 
 
 class ArcusConan(ConanFile):
-    name = "arcus"
+    name = "arcusle"
     license = "LGPL-3.0"
-    author = "Ultimaker B.V."
+    author = "Ultimaker B.V., FAME 3D LLC."
     url = "https://github.com/Ultimaker/libArcus"
     description = "Communication library between internal components for Ultimaker software"
-    topics = ("conan", "binding", "cura", "protobuf", "c++")
+    topics = ("conan", "binding", "cura le", "protobuf", "c++")
     settings = "os", "compiler", "build_type", "arch"
     exports = "LICENSE*"
 
@@ -100,7 +100,7 @@ class ArcusConan(ConanFile):
                 )
 
     def build_requirements(self):
-        self.test_requires("standardprojectsettings/[>=0.1.0]@ultimaker/stable")
+        self.test_requires("standardprojectsettings/[>=0.1.0]@lulzbot/stable")
 
     def generate(self):
         tc = CMakeToolchain(self)
@@ -127,7 +127,7 @@ class ArcusConan(ConanFile):
             sentry_org = self.conf.get("user.curaengine:sentry_org", "", check_type=str)
             if sentry_project == "" or sentry_org == "":
                 raise ConanInvalidConfiguration("sentry_project or sentry_org is not set")
-            
+
             if which("sentry-cli") is None:
                 self.output.warn("sentry-cli is not installed, skipping uploading debug symbols")
             else:
