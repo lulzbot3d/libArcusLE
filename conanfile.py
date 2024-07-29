@@ -19,9 +19,9 @@ class ArcusConan(ConanFile):
     name = "arcusle"
     license = "LGPL-3.0"
     author = "Ultimaker B.V., FAME 3D LLC."
-    url = "https://github.com/Ultimaker/libArcus"
-    description = "Communication library between internal components for Ultimaker software"
-    topics = ("conan", "binding", "cura le", "protobuf", "c++")
+    url = "https://github.com/lulzbot3d/libArcusLE"
+    description = "Fork of Arcus: A Communication library between internal components for Ultimaker software"
+    topics = ("conan", "binding", "cura", "protobuf", "c++")
     settings = "os", "compiler", "build_type", "arch"
     exports = "LICENSE*"
 
@@ -67,7 +67,7 @@ class ArcusConan(ConanFile):
     def config_options(self):
         if self.settings.os == "Windows":
             del self.options.fPIC
-        if self.conf.get("user.curaengine:sentry_url", "", check_type=str) == "":
+        if self.conf.get("user.curaenginele:sentry_url", "", check_type=str) == "":
             del self.options.enable_sentry
 
     def configure(self):
@@ -76,7 +76,7 @@ class ArcusConan(ConanFile):
 
     def layout(self):
         cmake_layout(self)
-        self.cpp.package.libs = ["Arcus"]
+        self.cpp.package.libs = ["ArcusLE"]
 
         if self.settings.build_type == "Debug":
             self.cpp.package.defines = ["ARCUS_DEBUG"]
@@ -86,7 +86,7 @@ class ArcusConan(ConanFile):
             self.cpp.package.system_libs = ["ws2_32"]
 
     def requirements(self):
-        self.requires("protobuf/3.21.9", transitive_headers=True)
+        self.requires("protobuf/3.21.12", transitive_headers=True)
 
     def validate(self):
         if self.settings.compiler.cppstd:
@@ -121,10 +121,9 @@ class ArcusConan(ConanFile):
         cmake.configure()
         cmake.build()
 
-        if self.options.get_safe("enable_sentry", False):
-            # Upload debug symbols to sentry
-            sentry_project = self.conf.get("user.curaengine:sentry_project", "", check_type=str)
-            sentry_org = self.conf.get("user.curaengine:sentry_org", "", check_type=str)
+        sentry_project = self.conf.get("user.curaenginele:sentry_project", "", check_type=str)
+        sentry_org = self.conf.get("user.curaenginele:sentry_org", "", check_type=str)
+        if self.options.get_safe("enable_sentry", False) and os.environ.get('SENTRY_TOKEN', None) and sentry_project != "" and sentry_org != "":
             if sentry_project == "" or sentry_org == "":
                 raise ConanInvalidConfiguration("sentry_project or sentry_org is not set")
 
@@ -134,14 +133,13 @@ class ArcusConan(ConanFile):
                 if self.settings.os == "Linux":
                     self.output.info("Stripping debug symbols from binary")
                     ext = ".so" if self.options.shared else ".a"
-                    self.run(f"objcopy --only-keep-debug --compress-debug-sections=zlib libArcus{ext} libArcus.debug")
-                    self.run(f"objcopy --strip-debug --strip-unneeded libArcus{ext}")
-                    self.run(f"objcopy --add-gnu-debuglink=libArcus.debug libArcus{ext}")
+                    self.run(f"objcopy --only-keep-debug --compress-debug-sections=zlib libArcusLE{ext} libArcus.debug")
+                    self.run(f"objcopy --strip-debug --strip-unneeded libArcusLE{ext}")
+                    self.run(f"objcopy --add-gnu-debuglink=libArcus.debug libArcusLE{ext}")
 
                 build_source_dir = self.build_path.parent.parent.as_posix()
                 self.output.info("Uploading debug symbols to sentry")
                 self.run(f"sentry-cli --auth-token {os.environ['SENTRY_TOKEN']} debug-files upload --include-sources -o {sentry_org} -p {sentry_project} {build_source_dir}")
-
 
     def package(self):
         copy(self, pattern="LICENSE*", dst="licenses", src=self.source_folder)
