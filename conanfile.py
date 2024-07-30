@@ -6,20 +6,20 @@ from conan import ConanFile
 required_conan_version = "<=1.56.0"
 
 
-class ArcusConan(ConanFile):
-    name = "arcus"
+class ArcusLEConan(ConanFile):
+    name = "arcusle"
     license = "LGPL-3.0"
     author = "Ultimaker B.V."
-    url = "https://github.com/Ultimaker/libArcus"
-    description = "Communication library between internal components for Ultimaker software"
+    url = "https://github.com/lulzbot3d/libArcusLE"
+    description = "Fork of libArcus: A Communication library between internal components for Ultimaker software"
     topics = ("conan", "binding", "cura", "protobuf", "c++")
     settings = "os", "compiler", "build_type", "arch"
     revision_mode = "scm"
     exports = "LICENSE*"
     generators = "CMakeDeps", "CMakeToolchain", "VirtualBuildEnv", "VirtualRunEnv"
 
-    python_requires = "umbase/[>=0.1.7]@ultimaker/stable"
-    python_requires_extend = "umbase.UMBaseConanfile"
+    python_requires = "lulzbase/[>=0.1.7]@lulzbot/stable"
+    python_requires_extend = "lulzbase.LulzBaseConanfile"
 
     options = {
         "shared": [True, False],
@@ -38,11 +38,11 @@ class ArcusConan(ConanFile):
 
     def set_version(self):
         if self.version is None:
-            self.version = self._umdefault_version()
+            self.version = self._lulzdefault_version()
 
     def requirements(self):
-        self.requires("standardprojectsettings/[>=0.1.0]@ultimaker/stable")
-        for req in self._um_data()["requirements"]:
+        self.requires("standardprojectsettings/[>=0.1.0]@lulzbot/stable")
+        for req in self._lulz_data()["requirements"]:
             self.requires(req)
 
     def config_options(self):
@@ -58,7 +58,7 @@ class ArcusConan(ConanFile):
 
     def layout(self):
         cmake_layout(self)
-        self.cpp.package.libs = ["Arcus"]
+        self.cpp.package.libs = ["ArcusLE"]
 
         if self.settings.build_type == "Debug":
             self.cpp.package.defines = ["ARCUS_DEBUG"]

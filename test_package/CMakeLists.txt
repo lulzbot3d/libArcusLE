@@ -4,13 +4,13 @@ project(PackageTest CXX)
 
 include(../cmake/StandardProjectSettings.cmake)
 
-find_package(arcus REQUIRED)
-find_package(protobuf 3.17.1 REQUIRED)
+find_package(arcusle REQUIRED)
+find_package(protobuf 3.21.12 REQUIRED)
 protobuf_generate_cpp(generated_PROTOBUF_SOURCES generated_PROTOBUF_HEADERS test.proto)
 
 add_executable(test "src/test.cpp" ${generated_PROTOBUF_SOURCES})
 use_threads(test)
-target_link_libraries(test PUBLIC arcus::arcus protobuf::libprotobuf)
+target_link_libraries(test PUBLIC arcusle::arcusle protobuf::libprotobuf)
 target_include_directories(test PUBLIC ${CMAKE_CURRENT_BINARY_DIR} "include")
 
 set_target_properties(test PROPERTIES PUBLIC_HEADER "include/test.h")

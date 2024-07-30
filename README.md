@@ -1,20 +1,12 @@
-# Arcus
+# ArcusLE
 
 <p align="center">
-    <a href="https://github.com/Ultimaker/libArcus/actions/workflows/conan-package.yml" alt="Conan Package">
-        <img src="https://github.com/Ultimaker/libarcus/actions/workflows/conan-package.yml/badge.svg" /></a>
-    <a href="https://github.com/Ultimaker/libArcus/issues" alt="Open Issues">
-        <img src="https://img.shields.io/github/issues/ultimaker/libarcus" /></a>
-    <a href="https://github.com/Ultimaker/libArcus/issues?q=is%3Aissue+is%3Aclosed" alt="Closed Issues">
-        <img src="https://img.shields.io/github/issues-closed/ultimaker/libarcus?color=g" /></a>
-    <a href="https://github.com/Ultimaker/libArcus/pulls" alt="Pull Requests">
-        <img src="https://img.shields.io/github/issues-pr/ultimaker/libarcus" /></a>
-    <a href="https://github.com/Ultimaker/libArcus/graphs/contributors" alt="Contributors">
-        <img src="https://img.shields.io/github/contributors/ultimaker/libarcus" /></a>
-    <a href="https://github.com/Ultimaker/libArcus" alt="Repo Size">
-        <img src="https://img.shields.io/github/repo-size/ultimaker/libarcus?style=flat" /></a>
-    <a href="https://github.com/Ultimaker/libArcus/blob/master/LICENSE" alt="License">
-        <img src="https://img.shields.io/github/license/ultimaker/libarcus?style=flat" /></a>
+    <a href="https://github.com/lulzbot3d/libArcusLE/actions/workflows/conan-package.yml" alt="Conan Package">
+        <img src="https://github.com/lulzbot3d/libArcusLE/actions/workflows/conan-package.yml/badge.svg" /></a>
+    <a href="https://github.com/lulzbot3d/libArcusLE" alt="Repo Size">
+        <img src="https://img.shields.io/github/repo-size/lulzbot3d/libArcusLE?style=flat" /></a>
+    <a href="https://github.com/lulzbot3d/libArcusLE/blob/master/LICENSE" alt="License">
+        <img src="https://img.shields.io/github/license/lulzbot3d/libArcusLE?style=flat" /></a>
 </p>
 
 This library contains C++ code for creating a socket in a thread and using this socket to send and receive messages
@@ -22,7 +14,7 @@ based on the Protocol Buffers library. It is designed to facilitate the communic
 
 ## License
 
-![License](https://img.shields.io/github/license/ultimaker/libarcus?style=flat)  
+![License](https://img.shields.io/github/license/lulzbot3d/libArcusLE?style=flat)  
 Arcus is released under terms of the AGPLv3 License. Terms of the license can be found in the LICENSE file. Or at
 http://www.gnu.org/licenses/agpl.html
 
@@ -88,7 +80,7 @@ conan remote remove cura
 
 ### 2. Clone libArcus
 ```bash
-git clone https://github.com/Ultimaker/libArcus.git
+git clone https://github.com/lulzbot3d/libArcusLE.git
 cd libArcus
 ```
 

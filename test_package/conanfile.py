@@ -4,7 +4,7 @@ from conan.tools.env import VirtualRunEnv
 from conans import tools
 
 
-class ArcusTestConan(ConanFile):
+class ArcusLETestConan(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
 
     def generate(self):
