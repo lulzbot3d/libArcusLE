@@ -9,7 +9,7 @@ class ArcusTestConan(ConanFile):
     test_type = "explicit"
 
     def build_requirements(self):
-        self.test_requires("standardprojectsettings/[>=0.1.0]@lulzbot3d/stable")
+        self.test_requires("standardprojectsettings/[>=0.1.0]@lulzbot/stable")
     def requirements(self):
         self.requires(self.tested_reference_str)
         self.requires("protobuf/3.21.9")
