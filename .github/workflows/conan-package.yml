@@ -13,7 +13,7 @@ on:
             conan_id:
                 required: false
                 type: string
-                description: 'The full conan package ID, e.g. "arcus/1.2.3@ultimaker/stable"'
+                description: 'The full conan package ID, e.g. "arcusle/1.2.3@lulzbot/stable"'
             create_latest_alias:
                 required: true
                 default: false
@@ -56,13 +56,13 @@ on:
 
 jobs:
     conan-recipe-version:
-        uses: ultimaker/cura/.github/workflows/conan-recipe-version.yml@main
+        uses: lulzbot3d/CuraLE/.github/workflows/conan-recipe-version.yml@main
         with:
-            project_name: arcus
+            project_name: arcusle
 
     conan-package-export:
         needs: [ conan-recipe-version ]
-        uses: ultimaker/cura/.github/workflows/conan-recipe-export.yml@main
+        uses: lulzbot3d/CuraLE/.github/workflows/conan-recipe-export.yml@main
         with:
             recipe_id_full: ${{ needs.conan-recipe-version.outputs.recipe_id_full }}
             recipe_id_latest: ${{ needs.conan-recipe-version.outputs.recipe_id_latest }}
@@ -75,7 +75,7 @@ jobs:
         if: ${{ (github.event_name == 'push' && github.ref_name == 'main') || (github.event_name == 'workflow_dispatch' && inputs.create_binaries_windows) }}
         needs: [ conan-recipe-version, conan-package-export ]
 
-        uses: ultimaker/cura/.github/workflows/conan-package-create.yml@main
+        uses: lulzbot3d/CuraLE/.github/workflows/conan-package-create.yml@main
         with:
             project_name: ${{ needs.conan-recipe-version.outputs.project_name }}
             recipe_id_full: ${{ needs.conan-recipe-version.outputs.recipe_id_full }}
@@ -90,7 +90,7 @@ jobs:
         if: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
         needs: [ conan-recipe-version, conan-package-export ]
 
-        uses: ultimaker/cura/.github/workflows/conan-package-create.yml@main
+        uses: lulzbot3d/CuraLE/.github/workflows/conan-package-create.yml@main
         with:
             project_name: ${{ needs.conan-recipe-version.outputs.project_name }}
             recipe_id_full: ${{ needs.conan-recipe-version.outputs.recipe_id_full }}
@@ -104,7 +104,7 @@ jobs:
         if: ${{ (github.event_name == 'push' && github.ref_name == 'main') || (github.event_name == 'workflow_dispatch' && inputs.create_binaries_linux) }}
         needs: [ conan-recipe-version, conan-package-export ]
 
-        uses: ultimaker/cura/.github/workflows/conan-package-create.yml@main
+        uses: lulzbot3d/CuraLE/.github/workflows/conan-package-create.yml@main
         with:
             project_name: ${{ needs.conan-recipe-version.outputs.project_name }}
             recipe_id_full: ${{ needs.conan-recipe-version.outputs.recipe_id_full }}
@@ -118,7 +118,7 @@ jobs:
         if: ${{ (github.event_name == 'push' && github.ref_name == 'main') || (github.event_name == 'workflow_dispatch' && inputs.create_binaries_linux) }}
         needs: [ conan-recipe-version, conan-package-export ]
 
-        uses: ultimaker/cura/.github/workflows/conan-package-create.yml@main
+        uses: lulzbot3d/CuraLE/.github/workflows/conan-package-create.yml@main
         with:
             project_name: ${{ needs.conan-recipe-version.outputs.project_name }}
             recipe_id_full: ${{ needs.conan-recipe-version.outputs.recipe_id_full }}
@@ -128,28 +128,3 @@ jobs:
             conan_logging_level: 'info'
         secrets: inherit
 
-    notify-export:
-        if: ${{ always() }}
-        needs: [ conan-recipe-version, conan-package-export ]
-
-        uses: ultimaker/cura/.github/workflows/notify.yml@main
-        with:
-            success: ${{ contains(join(needs.*.result, ','), 'success') }}
-            success_title: "New Conan recipe exported in ${{ github.repository }}"
-            success_body: "Exported ${{ needs.conan-recipe-version.outputs.recipe_id_full }}"
-            failure_title: "Failed to export Conan Export in ${{ github.repository }}"
-            failure_body: "Failed to exported ${{ needs.conan-recipe-version.outputs.recipe_id_full }}"
-        secrets: inherit
-
-    notify-create:
-        if: ${{ always() && ((github.event_name == 'push' && github.ref_name == 'main') || (github.event_name == 'workflow_dispatch' && inputs.create_binaries_linux)) }}
-        needs: [ conan-recipe-version, conan-package-create-macos, conan-package-create-windows, conan-package-create-linux, conan-package-create-linux-modern ]
-
-        uses: ultimaker/cura/.github/workflows/notify.yml@main
-        with:
-            success: ${{ contains(join(needs.*.result, ','), 'success') }}
-            success_title: "New binaries created in ${{ github.repository }}"
-            success_body: "Created binaries for ${{ needs.conan-recipe-version.outputs.recipe_id_full }}"
-            failure_title: "Failed to create binaries in ${{ github.repository }}"
-            failure_body: "Failed to created binaries for ${{ needs.conan-recipe-version.outputs.recipe_id_full }}"
-        secrets: inherit

@@ -12,12 +12,12 @@ from conan.tools.scm import Version
 required_conan_version = ">=1.55.0"
 
 
-class ArcusConan(ConanFile):
-    name = "arcus"
+class ArcusLEConan(ConanFile):
+    name = "arcusle"
     license = "LGPL-3.0"
-    author = "Ultimaker B.V."
-    url = "https://github.com/Ultimaker/libArcus"
-    description = "Communication library between internal components for Ultimaker software"
+    author = "Ultimaker B.V., FAME3D LLC."
+    url = "https://github.com/lulzbot3d/libArcusLE"
+    description = "Fork of Arcus: A Communication library between internal components for Ultimaker software"
     topics = ("conan", "binding", "cura", "protobuf", "c++")
     settings = "os", "compiler", "build_type", "arch"
     exports = "LICENSE*"
@@ -60,7 +60,7 @@ class ArcusConan(ConanFile):
 
     def layout(self):
         cmake_layout(self)
-        self.cpp.package.libs = ["Arcus"]
+        self.cpp.package.libs = ["ArcusLE"]
 
         if self.settings.build_type == "Debug":
             self.cpp.package.defines = ["ARCUS_DEBUG"]
@@ -84,7 +84,7 @@ class ArcusConan(ConanFile):
                 )
 
     def build_requirements(self):
-        self.test_requires("standardprojectsettings/[>=0.1.0]@ultimaker/stable")
+        self.test_requires("standardprojectsettings/[>=0.1.0]@lulzbot/stable")
 
     def generate(self):
         tc = CMakeToolchain(self)
