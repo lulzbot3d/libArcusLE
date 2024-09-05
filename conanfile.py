@@ -133,9 +133,9 @@ class ArcusLEConan(ConanFile):
                 if self.settings.os == "Linux":
                     self.output.info("Stripping debug symbols from binary")
                     ext = ".so" if self.options.shared else ".a"
-                    self.run(f"objcopy --only-keep-debug --compress-debug-sections=zlib libArcus{ext} libArcus.debug")
-                    self.run(f"objcopy --strip-debug --strip-unneeded libArcus{ext}")
-                    self.run(f"objcopy --add-gnu-debuglink=libArcus.debug libArcus{ext}")
+                    self.run(f"objcopy --only-keep-debug --compress-debug-sections=zlib libArcusLE{ext} libArcusLE.debug")
+                    self.run(f"objcopy --strip-debug --strip-unneeded libArcusLE{ext}")
+                    self.run(f"objcopy --add-gnu-debuglink=libArcusLE.debug libArcusLE{ext}")
 
                 build_source_dir = self.build_path.parent.parent.as_posix()
                 self.output.info("Uploading debug symbols to sentry")
