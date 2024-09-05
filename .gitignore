@@ -63,6 +63,9 @@ nbproject/*
 # PyCharm
 .idea
 
+# VSCode
+.vscode
+
 # SIP generated code
 /python/sipArcuspart*.cpp
 /python/sipAPIArcus.h
