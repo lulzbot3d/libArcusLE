@@ -76,7 +76,7 @@ class ArcusLEConan(ConanFile):
 
     def layout(self):
         cmake_layout(self)
-        self.cpp.package.libs = ["ArcusLE"]
+        self.cpp.package.libs = ["Arcus"]
 
         if self.settings.build_type == "Debug":
             self.cpp.package.defines = ["ARCUS_DEBUG"]
