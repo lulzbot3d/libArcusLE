@@ -15,9 +15,9 @@ set(arcus_SRCS
 )
 
 if(BUILD_SHARED_LIBS)
-    add_library(Arcus SHARED ${arcusle_SRCS})
+    add_library(Arcus SHARED ${arcus_SRCS})
 else()
-    add_library(Arcus STATIC ${arcusle_SRCS})
+    add_library(Arcus STATIC ${arcus_SRCS})
 endif()
 
 set_project_warnings(Arcus)
