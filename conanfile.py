@@ -16,7 +16,7 @@ required_conan_version = ">=1.55.0"
 
 
 class ArcusLEConan(ConanFile):
-    name = "arcusle"
+    name = "arcus"
     license = "LGPL-3.0"
     author = "Ultimaker B.V., FAME3D LLC."
     url = "https://github.com/lulzbot3d/libArcusLE"
