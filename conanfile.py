@@ -1,6 +1,5 @@
-from io import StringIO
 import os
-from os import path
+from shutil import which
 
 from conan import ConanFile
 from conan.errors import ConanInvalidConfiguration
@@ -10,7 +9,7 @@ from conan.tools.env import VirtualBuildEnv
 from conan.tools.files import copy, AutoPackager, update_conandata
 from conan.tools.microsoft import check_min_vs, is_msvc, is_msvc_static_runtime
 from conan.tools.scm import Version, Git
-from conans.tools import which
+
 
 required_conan_version = ">=2.7.0"
 
@@ -65,8 +64,8 @@ class ArcusLEConan(ConanFile):
 
     def export_sources(self):
         copy(self, "CMakeLists.txt", self.recipe_folder, self.export_sources_folder)
-        copy(self, "*", path.join(self.recipe_folder, "src"), path.join(self.export_sources_folder, "src"))
-        copy(self, "*", path.join(self.recipe_folder, "include"), path.join(self.export_sources_folder, "include"))
+        copy(self, "*", os.path.join(self.recipe_folder, "src"), os.path.join(self.export_sources_folder, "src"))
+        copy(self, "*", os.path.join(self.recipe_folder, "include"), os.path.join(self.export_sources_folder, "include"))
 
     def config_options(self):
         super().config_options()
