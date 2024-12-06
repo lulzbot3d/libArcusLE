@@ -9,10 +9,12 @@ class ArcusLETestConan(ConanFile):
     test_type = "explicit"
 
     def build_requirements(self):
-        self.test_requires("standardprojectsettings/[>=0.1.0]@lulzbot/stable")
+        self.test_requires("standardprojectsettings/[>=0.2.0]@lulzbot/stable")
+        self.tool_requires("protobuf/3.21.12")
+
     def requirements(self):
         self.requires(self.tested_reference_str)
-        self.requires("protobuf/3.21.9")
+        self.requires("protobuf/3.21.12")
 
     def layout(self):
         cmake_layout(self)
