@@ -1,9 +1,10 @@
 # ArcusLE
 
-[![Conan Package](https://github.com/lulzbot3d/libArcusLE/actions/workflows/conan-package.yml/badge.svg)](https://github.com/lulzbot3d/libArcusLE/actions/workflows/conan-package.yml)
-[![Repo Size](https://img.shields.io/github/repo-size/lulzbot3d/libArcusLE?style=flat)](https://github.com/lulzbot3d/libArcusLE)
-[![License](https://img.shields.io/github/license/lulzbot3d/libArcusLE?style=flat)](https://github.com/lulzbot3d/libArcusLE/blob/main/LICENSE)
-[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/lulzbot3d/libArcusLE/badge)](https://api.securityscorecards.dev/projects/github.com/lulzbot3d/libArcusLE)
+[![Badge Conan]][Conan]
+
+[![Badge Size]][Size]
+[![Badge Scorecard]][Scorecard]
+[![Badge License]][License]
 
 This is the LulzBot Fork of the original Arcus repo by UltiMaker.
 
@@ -157,3 +158,18 @@ The exception is repeated fields. Currently, only repeated messages are supporte
 The name Arcus is from the Roman god Arcus. This god is the roman equivalent of
 the goddess Iris, who is the personification of the rainbow and the messenger
 of the gods.
+
+<!------------------------------------------------------------>
+
+[Conan]: https://github.com/lulzbot3d/libArcusLE/actions/workflows/conan-package.yml
+
+[License]: LICENSE
+[Size]: https://github.com/lulzbo3d/libArcusLE
+[Scorecard]: https://api.securityscorecards.dev/projects/github.com/lulzbot3d/libArcusLE
+
+<!------------------------------------------------------------->
+
+[Badge Conan]: https://img.shields.io/github/actions/workflow/status/lulzbot3d/libArcusLE/conan-package.yml?branch=main&style=for-the-badge&logoColor=white&logo=conan&label=Conan%20Package
+[Badge Size]: https://img.shields.io/github/repo-size/lulzbot3d/libArcusLE?style=for-the-badge&logoColor=white&logo=googleanalytics
+[Badge License]: https://img.shields.io/github/license/lulzbot3d/libArcusLE?style=for-the-badge&logoColor=white&logo=gnu
+[Badge Scorecard]: https://img.shields.io/ossf-scorecard/github.com/lulzbot3d/libArcusLE?style=for-the-badge&logoColor=white&logo=GitHub&label=OpenSSF%20Scorecard
