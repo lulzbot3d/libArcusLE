@@ -14,12 +14,12 @@ from conan.tools.scm import Version, Git
 required_conan_version = ">=2.7.0"
 
 
-class ArcusLEConan(ConanFile):
+class ArcusConan(ConanFile):
     name = "arcus"
     license = "LGPL-3.0"
-    author = "Ultimaker B.V., FAME3D LLC."
+    author = "Ultimaker B.V."
     url = "https://github.com/lulzbot3d/libArcusLE"
-    description = "Fork of Arcus: A Communication library between internal components for Ultimaker software"
+    description = "Communication library between internal components for Ultimaker software"
     topics = ("conan", "binding", "cura", "protobuf", "c++")
     settings = "os", "compiler", "build_type", "arch"
     exports = "LICENSE*"
