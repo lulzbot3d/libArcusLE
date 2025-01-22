@@ -1,4 +1,4 @@
-name: conan-package
+name: Update Fork
 
 on:
   workflow_dispatch:
